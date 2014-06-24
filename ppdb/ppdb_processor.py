@@ -9,7 +9,7 @@ import pickle
 
 
 class Processor:
-    para_input = "ppdb-1.0-"+"l"+"-"+"lexical"
+    para_input = "ppdb_files/ppdb-1.0-"+"l"+"-"+"lexical"
     phrase_to_id = {}
     id_to_phrase = {}
     phrase_to_id_file = "phrase_to_id.pkl"
@@ -20,11 +20,11 @@ class Processor:
     
     def __init__(self, ppdb_size="l", ppdb_type="lexical", graph_output_file="basic_graph", \
                  phrase_to_id_file="phrase_to_id.pkl", id_to_phrase_file="id_to_phrase.pkl", phase_to_id_helper_file="phrase_to_id"):
-        self.para_input = "ppdb-1.0-"+ppdb_size+"-"+ppdb_type
+        self.para_input = "ppdb_files"+"/ppdb-1.0-"+ppdb_size+"-"+ppdb_type
         self.phrase_to_id_file = phrase_to_id_file
         self.id_to_phrase_file = id_to_phrase_file
         self.phrase_to_id_helper_file = phase_to_id_helper_file
-
+        self.graph_output_file = graph_output_file
     def process(self):
         i = 0
         with open(self.para_input) as myinput:
@@ -50,8 +50,8 @@ class Processor:
                         #e_given_f = features[indx+9:indx+17]
                         e_given_f = str(float(features[indx+9:indx+12])/100)
                         file_basic_graph.write(self.phrase_to_id[source] + "\t" + self.phrase_to_id[target] + "\t" + e_given_f + "\n")
-
-        print "saving part"
+        print "Total number of nodes: "+str(i)
+        print "Saving phrases to files"
         with open(self.phrase_to_id_file, 'wb') as output:
             pickle.dump(self.phrase_to_id, output, pickle.HIGHEST_PROTOCOL)
 

@@ -12,14 +12,30 @@ unique_name = domain+"_"+ppdb_size+"_"+ppdb_type+"_"
 
 if __name__ == "__main__":
     if len(sys.argv) > 3:
-        ppdb_size = sys.argv[1]
-        ppdb_type = sys.argv[2]   
-        domain = sys.argv[3]
-        my_processor = Processor(ppdb_size="l", ppdb_type="lexical", graph_output_file=unique_name+"basic_graph", \
-                                 phrase_to_id_file=unique_name+"phrase_to_id.pkl", id_to_phrase_file=unique_name+"id_to_phrase.pkl", phase_to_id_helper_file=unique_name+"phrase_to_id") 
-        my_processor.process()
+        ppdb_size = sys.argv[1]   # size
+        ppdb_type = sys.argv[2]   # type
+        domain = sys.argv[3]      # domain
+        my_processor = Processor(ppdb_size=ppdb_size, 
+                                 ppdb_type=ppdb_type,
+                                 graph_output_file=unique_name+"basic_graph", 
+                                 phrase_to_id_file=unique_name+"phrase_to_id.pkl",
+                                 id_to_phrase_file=unique_name+"id_to_phrase.pkl",
+                                 phase_to_id_helper_file=unique_name+"phrase_to_id") 
 
+        print "starting processing "+unique_name
+        my_processor.process()
+        print "end of proessing, Graph file is ready"
         #TODO prunner
-        my_labeler = Labeler("extract", unique_name+"basic_graph",  unique_name+"id_to_phrase.pkl", max_number_of_labels)
+        print "start transfering labels to the graph nodes"
+        my_labeler = Labeler (domain,
+                              unique_name+"basic_graph",
+                              unique_name+"id_to_phrase.pkl",
+                              max_number_of_labels)
         my_labeler.add_labels_to_graph()
- 
+        my_labeler.save_to_file()
+        print "transfering label done!"
+        print "Now it is ready for propagation"
+
+    else:
+        print "You need to pass size, type, and domain to this program"
+        print "Something like python command.py xl lexical europarl"

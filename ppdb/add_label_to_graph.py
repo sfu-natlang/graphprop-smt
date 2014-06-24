@@ -43,7 +43,6 @@ class Labeler:
             #print "#".join(changed_rule)
             #print changed_rule + " ?? " +  srule
             #print word + " " + srule + " " + prob + " " + changed_rule
-
             label_id = ""
             if changed_rule in self.label_to_id:
                 label_id = self.label_to_id[changed_rule]
@@ -65,10 +64,11 @@ class Labeler:
         return result_list
 
     def add_labels_to_graph(self):
+        j = 0
         with open(self.graph_file,"r") as graph:
             with open("seeds","w") as seeds_file:
                 for line in graph:
-                    for i in [0,1]:
+                    for i in [0,1]:  # for both target and source side
                         node = line.strip().split()[i]
                         if not node in self.processed_nodes:
                             phrase = self.id_to_phrase[node]
@@ -78,6 +78,9 @@ class Labeler:
                                 # write to seed file
                                     seeds_file.write(node+"\t"+label+"\t"+prob+"\n")
                             self.processed_nodes.append(node)
+                            j += 1
+                            if j % 1000 == 0 : 
+                                print str(j)+ " nodes processed" 
 
     def save_to_file(self):
         with open('id_to_label.pkl', 'wb') as output:
