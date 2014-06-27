@@ -84,8 +84,9 @@ class Labeler:
 
     def save_to_file(self):
         with open('id_to_label.pkl', 'wb') as output:
-            pickle.dump(dic_of_rules, output, pickle.HIGHEST_PROTOCOL)
- 
+            pickle.dump(self.id_to_label, output, pickle.HIGHEST_PROTOCOL)
+        with open('label_to_id.pkl', 'wb') as output:
+            pickle.dump(self.label_to_id, output, pickle.HIGHEST_PROTOCOL)
 
 # TODO main function
 

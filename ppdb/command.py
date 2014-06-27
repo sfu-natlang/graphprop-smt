@@ -15,6 +15,9 @@ if __name__ == "__main__":
         ppdb_size = sys.argv[1]   # size
         ppdb_type = sys.argv[2]   # type
         domain = sys.argv[3]      # domain
+        
+        unique_name = domain+"_"+ppdb_size+"_"+ppdb_type+"_"
+
         my_processor = Processor(ppdb_size=ppdb_size, 
                                  ppdb_type=ppdb_type,
                                  graph_output_file=unique_name+"basic_graph", 
