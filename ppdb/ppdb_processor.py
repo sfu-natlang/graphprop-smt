@@ -27,6 +27,7 @@ class Processor:
         self.graph_output_file = graph_output_file
     def process(self):
         i = 0
+        print "reading "+self.para_input
         with open(self.para_input) as myinput:
             with open(self.phrase_to_id_helper_file,"w") as file_phrase_to_id:
                 with open(self.graph_output_file,"w") as file_basic_graph:

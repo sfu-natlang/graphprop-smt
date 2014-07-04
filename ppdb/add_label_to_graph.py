@@ -9,6 +9,7 @@ class Labeler:
 
     extract_path = ""
     graph_file = ""
+    save_file_name=""
     label_to_id = {}
     id_to_label = {}
 
@@ -16,14 +17,14 @@ class Labeler:
     max_number_of_labels = 20
     processed_nodes = []
 
-    def __init__(self, extract_path, graph_file,  id_to_phrase_file, max_number_of_labels=20):
+    def __init__(self, extract_path, graph_file, save_file_name, id_to_phrase_file, max_number_of_labels=20):
         self.extract_path = extract_path
         self.graph_file = graph_file
         self.extractor = cdec.sa.GrammarExtractor(extract_path+'/extract.ini')
         with open(id_to_phrase_file, 'rb') as input:
             self.id_to_phrase = pickle.load(input)
         self.max_number_of_labels = max_number_of_labels
-
+        self.save_file_name = save_file_name
     # this will return a list of labels with probability
     def get_labels(self, phrase):
         result_list = []
@@ -66,7 +67,7 @@ class Labeler:
     def add_labels_to_graph(self):
         j = 0
         with open(self.graph_file,"r") as graph:
-            with open("seeds","w") as seeds_file:
+            with open(self.save_file_name+"seeds","w") as seeds_file:
                 for line in graph:
                     for i in [0,1]:  # for both target and source side
                         node = line.strip().split()[i]
@@ -83,9 +84,9 @@ class Labeler:
                                 print str(j)+ " nodes processed" 
 
     def save_to_file(self):
-        with open('id_to_label.pkl', 'wb') as output:
+        with open(self.save_file_name+'_id_to_label.pkl', 'wb') as output:
             pickle.dump(self.id_to_label, output, pickle.HIGHEST_PROTOCOL)
-        with open('label_to_id.pkl', 'wb') as output:
+        with open(self.save_file_name+'label_to_id.pkl', 'wb') as output:
             pickle.dump(self.label_to_id, output, pickle.HIGHEST_PROTOCOL)
 
 # TODO main function

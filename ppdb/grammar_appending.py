@@ -57,6 +57,6 @@ if __name__=="__main__":
     testExtractor = Extractor()
     testExtractor.extract(phrase_list_file="europarl/oov_list", propagation_output="europarl_xl_lexical_iter9_propagation_result", id_to_phrase_file="europarl_xl_lexical_id_to_phrase.pkl",id_to_label_file="id_to_label.pkl", max_number_of_labels=100)
       
-    testGrammarGenerator = grammarGenerator(extractor=testExtractor, grammar_files_path="europarl/old/dev.grammars", grammar_output_files_path="europarl/new/dev.grammars", text_file="europarl/dev.en-es", oov_list_file="europarl/oov_list")
+    testGrammarGenerator = grammarGenerator(extractor=testExtractor, grammar_files_path="europarl/old/devtest.grammars", grammar_output_files_path="europarl/new/devtest.grammars", text_file="europarl/devtest.en-es", oov_list_file="europarl/oov_list")
 
     testGrammarGenerator.just_oovs(GSCFG =True)

@@ -32,6 +32,7 @@ if __name__ == "__main__":
         print "start transfering labels to the graph nodes"
         my_labeler = Labeler (domain,
                               unique_name+"basic_graph",
+                              unique_name,
                               unique_name+"id_to_phrase.pkl",
                               max_number_of_labels)
         my_labeler.add_labels_to_graph()
