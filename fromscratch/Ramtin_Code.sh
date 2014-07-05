@@ -8,7 +8,7 @@ domain=europarl-20k
 lan=en # en fr
 direc=$domain-$lan
 path_hdfs=/user/rmehdiza/$direc
-path_local=/cs/natlang-projects/users/ramtin/majid_code
+path_local=/cs/natlang-user/ramtin/new_graph/graphprop-smt/fromscratch
 hadoop fs -mkdir $path_hdfs
 
 ##### Graph Creation Types 
