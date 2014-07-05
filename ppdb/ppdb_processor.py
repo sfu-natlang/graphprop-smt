@@ -69,7 +69,6 @@ class Processor:
             max_len_nodes = [k for k in self.node_to_node_connections.keys() if len(self.node_to_node_connections.get(k))==max([len(n) for n in self.node_to_node_connections.values()])] 
             len_sum = float(sum([len(n) for n in self.node_to_node_connections.values()]))
             average_len = len_sum / float(len(self.node_to_node_connections.keys()))
-            print len_sum
             #TODO number of nodes with one lables
 
             print 
@@ -89,6 +88,6 @@ class Processor:
 
 if __name__=="__main__":
    unique_name = "unit_test_ppdb_processor"
-   my_processor = Processor(ppdb_size="l", ppdb_type="lexical", graph_output_file=unique_name+"basic_graph", \
+   my_processor = Processor(ppdb_size="xxxl", ppdb_type="lexical", graph_output_file=unique_name+"basic_graph", \
                                  phrase_to_id_file=unique_name+"phrase_to_id.pkl", id_to_phrase_file=unique_name+"id_to_phrase.pkl", phase_to_id_helper_file=unique_name+"phrase_to_id") 
    my_processor.process()                                                                              
