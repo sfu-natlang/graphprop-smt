@@ -1,0 +1,37 @@
+
+
+#Lexical
+
+Size = l :
+
+------------------------reports----------------------------------
+Total number of nodes: 73775                                     
+Total number of connections: 198570                              
+Maximum Neighbours of a node: 67                                 
+Average Neighbours of a node: 2.69156218231                      
+-----------------------------------------------------------------
+
+Size = xl : 
+------------------------reports----------------------------------
+Total number of nodes: 102902
+Total number of connections: 548085
+Maximum Neighbours of a node: 330
+Average Neighbours of a node: 5.3262813162
+-----------------------------------------------------------------
+
+Size = xxl: 
+------------------------reports----------------------------------
+Total number of nodes: 122142
+Total number of connections: 2072526
+Maximum Neighbours of a node: 1231
+Average Neighbours of a node: 16.9681681977
+-----------------------------------------------------------------
+
+Size = xxxl:
+------------------------reports----------------------------------
+Total number of nodes: 125389
+Total number of connections: 7557658
+Maximum Neighbours of a node: 5255
+Average Neighbours of a node: 60.2736922697
+-----------------------------------------------------------------
+
