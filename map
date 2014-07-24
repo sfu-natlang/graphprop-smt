@@ -1,0 +1,29 @@
+
+H 
+
+Inductive 
+* Modified Regularization
+
+* On the semi-supervised learning of multi-layered perceptrons
+Malkin ICML 2008 ,interspeech 2009
+
+
+
+Transductive 
+Label Propagation
+
+MAD
+
+Spectral Graph Transduction
+
+Measure Propagation
+
+Sparse Label Propagation
+* Factor Graph Interpretation
+[Zhu et al., ICML 2003][Das and Smith, NAACL 2012]
+
+
+
+
+
+
