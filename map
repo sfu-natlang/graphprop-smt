@@ -1,5 +1,28 @@
 
-H 
+Agenda :
+
+    Effectivness of ppdb :
+         Experiments :
+               Pruning ppdb with the same procedure in majid's work and check the results
+               Intersection and Union results
+               
+    Graph Construction with features as edge:
+         Experiments :
+              Comparing different types of pruning techniques
+              Learning parameters on edges , example a uniform distribution, to show which features of ppdb are more usful.
+
+    Graph propagation:
+         Experiments:
+               Examining where graph propagation can help, for example for numbers, named entities it is not working. Maybe some morphological features are required.
+    
+    
+
+
+
+
+
+TEMP :
+
 
 Inductive 
 * Modified Regularization
