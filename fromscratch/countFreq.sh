@@ -17,8 +17,6 @@ if [ $# -lt 5 ]
     echo "args: language , ngram , input directory , output directory , monotext file"
     exit 1
 fi
-
-
 ##### Streaming hadoop library
 jar_file=/usr/lib/hadoop-mapreduce/hadoop-streaming-2.2.0.2.0.6.0-102.jar
 
@@ -49,16 +47,14 @@ hadoop fs -rm -r $hdfs_output
 hadoop fs -copyFromLocal $input_path/$input_file_name $path_hdfs
 
 hadoop jar $jar_file -D mapreduce.job.name=$name -D mapreduce.job.maps=$mapper_tasks -D mapreduce.job.reduces=$reducer_tasks -mapper "\"$mapper $ngram\"" -file $mapper -reducer $reducer -file $reducer -input $hdfs_input -output $hdfs_output
-
 # check if jobs are done
 if [ ! $? -eq 0 ]; then exit $?; fi
 
 mkdir -p $output_path/countFreq
-hadoop fs -getmerge "$hdfs_output/part*" $output_path$input_file_name.${ngram}.$expr_date.$language
-
-#hadoop fs -rm $path_hdfs/$input_file_name 
-
-echo "Final output is in :$output_path$input_file_name.${ngram}.$expr_date.$language" 
+hadoop fs -getmerge "$hdfs_output/part*" $output_path/countFreq/$input_file_name.${ngram}.$expr_date.$language
+#hadoop fs -rm $path_hdfs/$input_file_name
+ 
+echo "Final output is in :$output_path/countFreq/$input_file_name.${ngram}.$expr_date.$language" 
 
 
 
