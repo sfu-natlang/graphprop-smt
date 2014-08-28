@@ -3,7 +3,7 @@ Results
 
 #Name format :
 
-(oov|all) _ <ppdb_size> _ <ppdb_type> _ <pruning_method> _ <number_of_iterations>
+(oov|all) _ (ppdb size) _ (ppdb type) _ (pruning method) _ (number of iterations)
 
 for example 
 oov_xl_lexical_bigram_itr9
