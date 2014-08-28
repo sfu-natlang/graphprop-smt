@@ -38,7 +38,7 @@ if __name__ == "__main__":
                               unique_name+"id_to_phrase.pkl",
                               unique_name+"phrase_to_id.pkl",
                               max_number_of_labels)
-        my_labeler.add_labels_to_graph()
+        my_labeler.add_labels_to_graph(label_type)
         print "Start of pruning graph"
         my_labeler.prune_graph(unique_name+"basic_graph", unique_name+"seeds", "../domain/europarl/oov_list", graph_type, "knn", knn)
         print "End of pruning graph"

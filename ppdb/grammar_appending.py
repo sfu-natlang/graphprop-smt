@@ -43,7 +43,7 @@ class grammarGenerator:
                                 label_list = self.extractor.get_labels(word)
                                 for (rule,p) in label_list:
                                     prob = float(p)
-                                    srule = rule.replace('~~~',word, 1)+" ||| EgivenFCoherent=1.0 SampleCountF=1.0 CountEF=1.0 MaxLexFgivenE=1.0 MaxLexEgivenF=1.0 IsSingletonF=1.0 IsSingletonFE=1.0 "+"Seed="+ str(prob)
+                                    srule = rule.replace('~~~',word, 1)+" ||| EgivenFCoherent=1.0 SampleCountF=1.0 CountEF=1.0 MaxLexFgivenE=1.0 MaxLexEgivenF=1.0 IsSingletonF=1.0 IsSingletonFE=1.0 newF=0.0 "+"Seed="+ str(prob)
                                     new_grammar_file.write(srule+"\n")
                                     print srule + "\n"
                 grammar_file.close()
@@ -55,8 +55,13 @@ class grammarGenerator:
 
 if __name__=="__main__":
     testExtractor = Extractor()
-    testExtractor.extract(phrase_list_file="europarl/oov_list", propagation_output="europarl_xl_lexical_iter9_propagation_result", id_to_phrase_file="europarl_xl_lexical_id_to_phrase.pkl",id_to_label_file="id_to_label.pkl", max_number_of_labels=100)
+    testExtractor.extract(phrase_list_file="../domain/europarl/oov_list", propagation_output="pruned_second_test", id_to_phrase_file="europarl_xl_lexical_id_to_phrase.pkl",id_to_label_file="europarl_xl_lexical_id_to_label.pkl", max_number_of_labels=100)
       
-    testGrammarGenerator = grammarGenerator(extractor=testExtractor, grammar_files_path="europarl/old/devtest.grammars", grammar_output_files_path="europarl/new/devtest.grammars", text_file="europarl/devtest.en-es", oov_list_file="europarl/oov_list")
+    testGrammarGenerator = grammarGenerator(extractor=testExtractor, grammar_files_path="../domain/europarl/old/dev.grammars", grammar_output_files_path="../domain/europarl/new_xl_itr9_pr_oov/dev.grammars", text_file="../domain/europarl/dev.en-es", oov_list_file="../domain/europarl/oov_list")
 
     testGrammarGenerator.just_oovs(GSCFG =True)
+
+    testGrammarGenerator = grammarGenerator(extractor=testExtractor, grammar_files_path="../domain/europarl/old/devtest.grammars", grammar_output_files_path="../domain/europarl/new_xl_itr9_pr_oov/devtest.grammars", text_file="../domain/europarl/devtest.en-es", oov_list_file="../domain/europarl/oov_list")
+
+    testGrammarGenerator.just_oovs(GSCFG =True)
+

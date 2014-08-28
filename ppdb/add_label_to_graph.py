@@ -94,11 +94,11 @@ class Labeler:
         with open(oov_list_file) as inp:
             for line in inp:
                 if line.strip() in self.phrase_to_id:
-                    oov_list.append(phrase_to_id[line.strip()])
+                    oov_list.append(self.phrase_to_id[line.strip()])
 
    # Pruning 
         graph = {}
-        with open(graph_file) as inp:
+        with open(graph_file_name) as inp:
             for line in inp:
                 parts = line.strip().split()
                 node1= parts[0]
@@ -108,8 +108,8 @@ class Labeler:
                     graph[node1].append((node2,weight))
                 else:
                     graph[node1] = [(node2,weight)]
-
-        new_graph =  Pruner.prune(graph, labeled_nodes, oov_list, output_graph_type, neighbour_prunning_method, neighbour_prunning_input)
+        pruner = Pruner()
+        new_graph =  pruner.prune(graph, self.labeled_nodes, oov_list, output_graph_type, neighbour_prunning_method, neighbour_prunning_input)
        
 
    # reading graph file 
@@ -117,7 +117,7 @@ class Labeler:
            #TODO add pruning details to the file
             with open(graph_file_name+".pruned",'w') as inp2:
                 for line in inp:
-                    parts = lines.strip().split()
+                    parts = line.strip().split()
                     if parts[0] in new_graph and parts[1] in new_graph:
                         inp2.write(line)
 
@@ -126,7 +126,7 @@ class Labeler:
             #TODO add pruning details to the file
             with open(seed_file_name+".pruned",'w') as inp2:
                 for line in inp:
-                    parts = lines.strip().split()
+                    parts = line.strip().split()
                     if parts[0] in new_graph:
                         inp2.write(line)       
 
