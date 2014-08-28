@@ -1,15 +1,27 @@
 ## Graph Construction Using PPDB
-
-dependencies : 
-  Cdec
-  Junto
-
-
-#
+Using ppdb prapharses for solving out of vocabulary problem in SMT.
+#dependencies : 
+.Cdec
+.Junto
 
 
 # Running the code:
-  You need to pass size, type, and domain to this program
-  Something like python command.py xl lexical europarl
+  For running the code you need to pass parameters to command.py and these parameters are size and type of ppdb and domain path of input data
+  e.g. `python command.py xl lexical europarl`
  
+
+
+Classes in the directory
+========================
+.Processor
+...This class is located in ppdb_processor file and is responsible for processing ppdb files and change it to the graph file format which can be used in the next steps. It uses a dictonary to set id for phrases (or lexicals) and store the mapping between phrases and ids as a python dictionary object.
+
+.Labeler
+...This class is located in add_label_to_graph and is responsible for sending each phrase to CDEC grammar extractor and appending corresponding labels to the seed nodes.
+
+.Pruner
+...This can be used to prune the graph in different ways. Right now it support bigram and trigram, KNN pruning and also radius pruning.
+
+
+Note that all of these classes has their own unit test in their corresponding files.
 
