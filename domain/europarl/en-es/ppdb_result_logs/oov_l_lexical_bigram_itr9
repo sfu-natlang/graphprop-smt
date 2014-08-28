@@ -1,0 +1,36 @@
+### SCORE REPORT #############################################################
+        OUTPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/eval.devtest.lc-tok.en-es.20140719-190547/test.trans
+  SCRIPT INPUT=devtest.lc-tok.en-es.sgm
+ DECODER INPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/eval.devtest.lc-tok.en-es.20140719-190547/test.input
+    REFERENCES=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/eval.devtest.lc-tok.en-es.20140719-190547/test.refs
+------------------------------------------------------------------------------
+          BLEU=0.272038
+           TER=0.546229
+##############################################################################
+
+(A copy of this report can be found in /cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/eval.devtest.lc-tok.en-es.20140719-190547/test.scores)
+
+INFO:root:### SCORE REPORT #############################################################
+        OUTPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/eval.dev.input.20140719-183912/test.trans
+  SCRIPT INPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/dev.input
+ DECODER INPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/eval.dev.input.20140719-183912/test.input
+    REFERENCES=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/eval.dev.input.20140719-183912/test.refs
+------------------------------------------------------------------------------
+          BLEU=0.275015
+           TER=0.551132
+##############################################################################
+
+
+INFO:root:### SCORE REPORT #############################################################
+        OUTPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/eval.devtest.lc-tok.en-es.20140719-190547/test.trans
+  SCRIPT INPUT=devtest.lc-tok.en-es.sgm
+ DECODER INPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/eval.devtest.lc-tok.en-es.20140719-190547/test.input
+    REFERENCES=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/eval.devtest.lc-tok.en-es.20140719-190547/test.refs
+------------------------------------------------------------------------------
+          BLEU=0.272038
+           TER=0.546229
+##############################################################################
+
+final weights:
+/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140819-124702/weights.final
+

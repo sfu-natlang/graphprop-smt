@@ -1,0 +1,46 @@
+DECODER COMPLETED AT Fri Jul 11 18:54:03 PDT 2014
+
+OUTPUT: /cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.trans
+
+Executing and gathering output: cat /cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.trans | /cs/natlang-user/ramtin/software/cdec-2013-07-13/training/utils/../../mteval/fast_score -r /cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.refs -m ibm_bleu
+BLEU: 0.266509
+Executing and gathering output: cat /cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.trans | /cs/natlang-user/ramtin/software/cdec-2013-07-13/training/utils/../../mteval/fast_score -r /cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.refs -m ter
+ TER: 0.551183
+
+
+### SCORE REPORT #############################################################
+        OUTPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.trans
+  SCRIPT INPUT=devtest.lc-tok.en-es.sgm
+ DECODER INPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.input
+    REFERENCES=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.refs
+------------------------------------------------------------------------------
+          BLEU=0.266509
+           TER=0.551183
+##############################################################################
+
+(A copy of this report can be found in /cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.scores)
+
+INFO:root:### SCORE REPORT #############################################################
+        OUTPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.dev.input.20140611-181808/test.trans
+  SCRIPT INPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/dev.input
+ DECODER INPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.dev.input.20140611-181808/test.input
+    REFERENCES=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.dev.input.20140611-181808/test.refs
+------------------------------------------------------------------------------
+          BLEU=0.272185
+           TER=0.555059
+##############################################################################
+
+
+INFO:root:### SCORE REPORT #############################################################
+        OUTPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.trans
+  SCRIPT INPUT=devtest.lc-tok.en-es.sgm
+ DECODER INPUT=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.input
+    REFERENCES=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/eval.devtest.lc-tok.en-es.20140611-183553/test.refs
+------------------------------------------------------------------------------
+          BLEU=0.266509
+           TER=0.551183
+##############################################################################
+
+final weights:
+/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/mira.dev.lc-tok.en-es.20140711-135704/weights.final
+
