@@ -20,7 +20,8 @@
 *.rar
 *.tar
 *.zip
- 
+*.pkl 
+
 # Logs and databases #
 ######################
 *.log
