@@ -1,0 +1,1 @@
+:%s/\/global\/scratch\/ramtin\/runs\/en_es_parl_baseline\//\/cs\/natlang-user\/ramtin\/new_graph\/graphprop-smt\/ppdb\/europarl\/new\//g

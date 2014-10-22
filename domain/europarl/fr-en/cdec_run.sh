@@ -6,8 +6,8 @@
 Cdec_Path=/cs/natlang-user/ramtin/software/cdec-2013-07-13
 #Data_Path=/global/scratch/ramtin/data/parallel_corpora/subtitle_es_en2
 
-source_language_name=en
-target_language_name=es
+source_language_name=fr
+target_language_name=en
 
 #Train_file_name=OpenSubtitles2013.en-es
 #Test_file_name=devtest
@@ -29,11 +29,11 @@ target_language_name=es
 #filtering 
 # max line lenght 80 
 #echo "filtering \n" > log.log
-#$Cdec_Path/corpus/filter-length.pl -80 nc.lc-tok.$source_language_name"-"$target_language_name > training.$source_language_name"-"$target_language_name
+#$Cdec_Path/corpus/filter-length.pl -80 train.$source_language_name"-"$target_language_name > training.$source_language_name"-"$target_language_name
 
 
 # bidirectional word alignments
-#echo "bidirectional word alignment" > log.log
+#echo "bidirectional word alignment" 
 #$Cdec_Path/word-aligner/fast_align -i training.$source_language_name"-"$target_language_name -d -v -o > training.$source_language_name"-"$target_language_name.fwd_align
 #$Cdec_Path/word-aligner/fast_align -i training.$source_language_name"-"$target_language_name -d -v -o -r > training.$source_language_name"-"$target_language_name.rev_align
 
@@ -60,14 +60,14 @@ target_language_name=es
 
 #extracting grammars for dev and test
 
-#python -m cdec.sa.extract -c extract.ini -g dev.grammars -j 3 -z < "dev."$source_language_name"-"$target_language_name > dev.lc-tok.$source_language_name"-"$target_language_name.sgm
-#python -m cdec.sa.extract -c extract.ini -g devtest.grammars -j 3 -z < "devtest."$source_language_name"-"$target_language_name > devtest.lc-tok.$source_language_name"-"$target_language_name.sgm
+python -m cdec.sa.extract -c extract.ini -g dev.grammars -j 3 -z < "dev."$source_language_name"-"$target_language_name > dev.lc-tok.$source_language_name"-"$target_language_name.sgm
+python -m cdec.sa.extract -c extract.ini -g devtest.grammars -j 3 -z < "devtest."$source_language_name"-"$target_language_name > devtest.lc-tok.$source_language_name"-"$target_language_name.sgm
 
 
 
 # Tunning
 
-python /cs/natlang-user/ramtin/software/cdec-2013-07-13/training/mira/mira.py -d dev.lc-tok.$source_language_name"-"$target_language_name.sgm -t devtest.lc-tok.$source_language_name"-"$target_language_name.sgm -c cdec.ini -j 26
+#python /cs/natlang-user/ramtin/software/cdec-2013-07-13/training/mira/mira.py -d dev.lc-tok.$source_language_name"-"$target_language_name.sgm -t devtest.lc-tok.$source_language_name"-"$target_language_name.sgm -c cdec.ini -j 6
 
 #perl /global/scratch/ramtin/software/cdec/training/dpmert/dpmert.pl -d dev.lc-tok.$source_language_name"-"$target_language_name.sgm -w initweight.ini -c cdec.ini
 
