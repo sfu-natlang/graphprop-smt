@@ -31,6 +31,7 @@ class Labeler:
         self.save_file_name = save_file_name
     # this will return a list of labels with probability
     def get_labels(self, phrase):
+        #TODO label modes
         result_list = []
         grammars = self.extractor.grammar(phrase)        
         for rule in grammars:

@@ -11,10 +11,9 @@ Using ppdb prapharses for solving out of vocabulary problem in SMT.
  
 
 
-Classes in the directory
-========================
+##Classes in the directory
 * Processor
-This class is located in ppdb_processor file and is responsible for processing ppdb files and change it to the graph file format which can be used in the next steps. It uses a dictonary to set id for phrases (or lexicals) and store the mapping between phrases and ids as a python dictionary object.
+This class is located in ppdb_processor file and is responsible for processing ppdb files and change it to the graph file format which can be used in the next steps. It uses a dictonary to set id for phrases (or lexicals) and store the mapping between phrases and ids as a python dictionary object. This file also provide useful statistical information about selected PPDB file.
 
 * Labeler
 This class is located in add_label_to_graph and is responsible for sending each phrase to CDEC grammar extractor and appending corresponding labels to the seed nodes.

@@ -1,3 +1,14 @@
+# Just for this Project #
+# ###################
+experiments/
+monotext/
+mira.*
+training.*
+europarl_*
+*.crc
+*.pkl
+ppdb_files/
+
 # Compiled source #
 ###################
 *.com
