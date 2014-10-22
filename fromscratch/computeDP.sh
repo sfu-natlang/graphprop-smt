@@ -20,7 +20,8 @@ if [ $# -lt 8 ]
 fi
 
 ##### Streaming hadoop library
-jar_file=/usr/lib/hadoop-mapreduce/hadoop-streaming-2.2.0.2.0.6.0-102.jar
+#jar_file=/usr/lib/hadoop-mapreduce/hadoop-streaming-2.2.0.2.0.6.0-102.jar
+jar_file=/usr/lib/hadoop-mapreduce/hadoop-streaming.jar
 
 #####  input information
 path_hdfs=/user/rmehdiza/computeDP/

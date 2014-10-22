@@ -298,8 +298,10 @@ def create_full_graph(phr, dp_lst):
         print '%s\t%s\t%f'%(phr, neighbor, prob/normalizer) 
 
 def reducer():
-    for line in sys.stdin:
-    #for line in open('old/DPs.out'):
+    #for line in sys.stdin: #RAMTIN CHANGE
+    #fi = "/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/experiments/computeDP/europarl_v7-1k.en.2.2014_10_07_14.en"
+    fi = "/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/experiments/computeDP/europarl_v7.en.2.2014_10_06_10.en"
+    for line in open(fi):
         phr, dp=line.split('\t')
         #if remove_stop_words and phr in stopwords: continue;
         dp=eval(dp)
@@ -324,8 +326,16 @@ def reducer():
 
 
 if __name__ == "__main__":
+
+
+# europarl_v7.en.2.2014_10_06_10.en.2014_10_06_10.indx
+
+#  en 20 bi 20 ../domain/europarl/experiments/computeInvIndx/europarl_v7.en.2.2014_10_06_10.en.2014_10_06_10.indx ../domain/europarl/en-es/phrase-table.moses.en ../domain/europarl/en-es/stopwords/stopwords.en
+
+#  en 20 bi 20 ../domain/europarl/experiments/computeInvIndx/europarl_v7-1k.en.2.2014_10_07_15.en.2014_10_07_15.indx ../domain/europarl/en-es/phrase-table.moses.en ../domain/europarl/en-es/stopwords/stopwords.en 
     if len(sys.argv) > 1:
-        ext=sys.argv[1]    
+        ext=sys.argv[1]
+        #ext = "en"    
     if len(sys.argv) > 2:
         max_neighbors_threshold=float(sys.argv[2])
         sys.stderr.write('max_neighbor=%d\n'%max_neighbors_threshold);

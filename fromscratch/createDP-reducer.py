@@ -10,13 +10,14 @@ dp_max_size=0    # 0 for no limit
 association_measure='pmi'
 ngram=1
 ext='fr'
+freq_file_path=''
 
 def readWordFreq():
-    global tot_tokens, freqDic
+    global tot_tokens, freqDic, freq_file_path
     tot_tokens=0
     freqDic=dict()
     sys.stderr.write('%s: loading word Frequency file\n'%datetime.now().strftime('%H:%M:%S'))
-    freq_file=open('wordFreq.%dg.%s'%(ngram, ext))
+    freq_file=open(freq_file_path)#open('wordFreq.%dg.%s'%(ngram, ext))
     for line in freq_file:
         splits=line.split('\t')
         freq=int(splits[1])
@@ -169,6 +170,8 @@ if __name__ == "__main__":
         context_word_freq_threshold=int(sys.argv[4])
         sys.stderr.write('center_phr_freq_threshold=%d\n'%center_phr_freq_threshold)
         sys.stderr.write('context_word_freq_threshold=%d\n'%context_word_freq_threshold)
+    if len(sys.argv) >5:
+        freq_file_path = sys.argv[5]
     readWordFreq()
     if center_phr_freq_threshold>0: 
         load_phrase_table()

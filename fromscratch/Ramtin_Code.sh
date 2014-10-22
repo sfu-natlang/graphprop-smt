@@ -4,12 +4,13 @@
 jar_file=/usr/lib/hadoop-mapreduce/hadoop-streaming-2.2.0.2.0.6.0-102.jar
 
 #####  input information 
-domain=europarl-20k
+domain=europarl #-20k
 lan=en # en fr
 direc=$domain-$lan
 path_hdfs=/user/rmehdiza/$direc
 path_local=/cs/natlang-user/ramtin/new_graph/graphprop-smt/fromscratch
 hadoop fs -mkdir $path_hdfs
+expr_date=`date +%Y_%m_%d_%H`
 
 ##### Graph Creation Types 
 graph_type=bi  # bi/tri/full
@@ -33,36 +34,52 @@ if [ $min_freq -gt 0 ]; then freq_str="-rmvFreq$min_freq"; else freq_str=""; fi
 
 #output_dir=$stopwords-d$d$ngram_str$exteq_str-Both
 
+input_dir=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/$domain
+
+output_dir=/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/$domain/experiments
+
+#Created_$expr_date/dp_Ngram-$ngram-Graph-$graph_type-S-$stopword/Prune_minfreq-$min_freq-d-$d-n-$n-l-$l/Propagation_
+
+
+#countFreq_input=
+
 #dir=$corpus
 #output_dir=$stopwords$ngram_str-d$d$freq_str
 graph_file=${graph_type}Graph-n${n}
 #mkdir -p $dir/$output_dir
 reduce_tasks=18
 
-mkdir -p $path_local/$direc
+#mkdir -p $path_local/$direc
+
 countFreq()
 {
-        
+# The first argoman is monotext file name: $1 TODO
+ 
 	mapper=phraseCount-mapper.py
 	reducer=phraseCount-reducer.py
 	name=phraseCount-$output_dir
 	mapper_tasks=18
 	reducer_tasks=$reduce_tasks
        
-        # loading input 
-        hadoop fs -copyFromLocal monotext.$lan $path_hdfs
+        # loading input
+        hadoop fs -copyFromLocal $input_dir/monotext/monotext.$lan $path_hdfs
 
 	input=$path_hdfs/monotext.$lan
 	output=$path_hdfs/wordFreq$ngram_str.$lan
 
 	hadoop fs -rm -r $output
-	hadoop jar $jar_file -D mapred.job.name=$name -D mapred.map.tasks=$mapper_tasks -D mapred.reduce.tasks=$reducer_tasks -mapper "\"$mapper $ngram\"" -file $mapper -reducer $reducer -file $reducer -input $input -output $output
+	hadoop jar $jar_file -D mapreduce.job.name=$name -D mapreduce.job.maps=$mapper_tasks -D mapreduce.job.reduces=$reducer_tasks -mapper "\"$mapper $ngram\"" -file $mapper -reducer $reducer -file $reducer -input $input -output $output
 	if [ ! $? -eq 0 ]; then exit $?; fi
-	hadoop fs -getmerge "$output/part*" $path_local/$direc/wordFreq${ngram_str}.$lan
+	#hadoop fs -getmerge "$output/part*" $path_local/$direc/wordFreq${ngram_str}.$lan
+        mkdir -p $output_dir/countFreq
+        hadoop fs -getmerge "$output/part*" $output_dir/countFreq/N${ngram_str}.$expr_date.$lan
 }
+#countFreq
 
 createDP()
 {
+# The first argoman is countFreq output: $1
+ 
     if [ $stopwords = "nostop" ]; then remove_stop_words="true"; else remove_stop_words="false"; fi
 
 	mapper=createDP-mapper.py
@@ -74,27 +91,29 @@ createDP()
 
 
         #loading input to hdfs
-        #hadoop fs -copyFromLocal monotext.$lan $path_hdfs
+        hadoop fs -copyFromLocal $input_dir/monotext/monotext.$lan $path_hdfs
 
-        #
 	input=$path_hdfs/monotext.$lan
-
 	output=$path_hdfs/DPs 
 
 	hadoop fs -rm -r $output
 
-	hadoop fs -copyFromLocal stopwords.$lan $path_hdfs
+	hadoop fs -copyFromLocal $input_dir/stopwords/stopwords.$lan $path_hdfs
         #hadoop fs -copyFromLocal phrase-table.moses.$lan $path_hdfs
         #hadoop fs -copyFromLocal oov.$lan $path_hdfs
 
         #hadoop fs -copyFromLocal phrase-table.moses.out $dir/phrase-table.moses.$ext
         if [ $min_freq -gt 0 ]; then package_str=" -file phrase-table.moses.$lan -file oovs.$lan"; else package_str=""; fi
 
-	hadoop jar $jar_file -D mapred.job.name=$name -D mapred.map.tasks=$mapper_tasks -D mapred.reduce.tasks=$reducer_tasks -mapper "\"$mapper $lan $remove_stop_words $ngram $numerized\"" -file $mapper -reducer "\"$reducer $lan $d $ngram $min_freq \"" -file $reducer -input $input -output $output -file $path_local/$direc/wordFreq${ngram_str}.$lan -file stopwords.$lan $package_str
+#	hadoop jar $jar_file -D mapred.job.name=$name -D mapred.map.tasks=$mapper_tasks -D mapred.reduce.tasks=$reducer_tasks -mapper "\"$mapper $lan $remove_stop_words $ngram $numerized\"" -file $mapper -reducer "\"$reducer $lan $d $ngram $min_freq \"" -file $reducer -input $input -output $output -file $path_local/$direc/wordFreq${ngram_str}.$lan -file stopwords.$lan $package_str
+	hadoop jar $jar_file -D mapred.job.name=$name -D mapred.map.tasks=$mapper_tasks -D mapred.reduce.tasks=$reducer_tasks -mapper "\"$mapper $lan $remove_stop_words $ngram $numerized\"" -file $mapper -reducer "\"$reducer $lan $d $ngram $min_freq \"" -file $reducer -input $input -output $output -file $1 -file $input_dir/stopwords/stopwords.$lan $package_str
+
+
 	if [ ! $? -eq 0 ]; then exit $?; fi
 	hadoop fs -getmerge "$output/part*" $path_local/$direc/DPs.$lan
 }
 
+createDP /cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/experiments/countFreq/N.1g.2014_08_07_15.en
 computeDPNorm()
 {
 	mapper=identity-mapper.py
@@ -259,7 +278,7 @@ DP_input=monotext.$ext
 
 
 
-countFreq
+#countFreq
 #createDP
 #createInvertedIndex
 #computeDPNorm
