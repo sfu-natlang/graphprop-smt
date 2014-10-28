@@ -17,3 +17,27 @@ input data for SMT
 Storing logs and results of experiments
  
 
+
+#Graph file formats
+Using both DP and PPDB would result in these files that are used in propagation section
+
+### input graph
+(name_of_node) \<tab\> (name_of_neighbour_node) \<tab\> (weight) \<newline\>
+
+### gold labels
+(name_of_node) \<tab\> (label) \<tab\> (prob) \<newline\>
+
+### seeds
+(name_of_node) \<tab\> (label) \<tab\> (prob) \<newline\>
+
+
+#Propagation Methods 
+
+### MAD
+
+### MADLL
+
+
+# Merging Methods 
+
+Just oovs, smoothing (lexical, phrasal)
