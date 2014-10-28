@@ -2,6 +2,7 @@ graphprop-smt
 =============
 Graph propagation for statistical machine translation
 
+
 #Directory Structure
 
 ## PPDB
@@ -41,3 +42,15 @@ Using both DP and PPDB would result in these files that are used in propagation 
 # Merging Methods 
 
 Just oovs, smoothing (lexical, phrasal)
+
+
+<pre>
+                     Files
+  +---------+      +---------+      +-----------+       +-------------+
+  |Step 1   |      |graph inp|      |Propagation|       |   Merge     |
+  |---------|      +---------+      |-----------|       |-------------|
+  | PPDB    |+---->|Seeds    |+---->|Simple     |+----->|OOVs lexical |
+  | DP      |      +---------+      |MAD        |       |Smoothing phr|
+  |         |      |Golden   |      |MADLL      |       |             |
+  +---------+      +---------+      +-----------+       +-------------+
+</pre>
