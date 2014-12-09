@@ -17,20 +17,24 @@ class Processor:
     phrase_to_id_helper_file = "phrase_to_id"
 
     # TODO if reports required , for speed. right now , we are computing reports always.
-    report = True
+    report = False
     node_to_node_connections = {}
   
 
     graph_output_file="basic_graph"
     
-    def __init__(self, ppdb_size="l", ppdb_type="lexical", graph_output_file="basic_graph", \
+    def __init__(self, ppdb_size="l", ppdb_type="lexical",ppdb_lang="en", graph_output_file="basic_graph", \
                  phrase_to_id_file="phrase_to_id.pkl", id_to_phrase_file="id_to_phrase.pkl", phase_to_id_helper_file="phrase_to_id"):
-        self.para_input = "ppdb_files"+"/ppdb-1.0-"+ppdb_size+"-"+ppdb_type
+        if ppdb_lang == "en":
+            self.para_input = "ppdb_files"+"/ppdb-1.0-"+ppdb_size+"-"+ppdb_type
+        else:
+            self.para_input = "ppdb_files"+"/ppdb-"+ppdb_lang+"-1.0-"+ppdb_size+"-"+ppdb_type
         self.phrase_to_id_file = phrase_to_id_file
         self.id_to_phrase_file = id_to_phrase_file
         self.phrase_to_id_helper_file = phase_to_id_helper_file
         self.graph_output_file = graph_output_file
-    def process(self):
+
+    def process(self, weight_type):
         i = 0
         j = 0
         print "reading "+self.para_input
@@ -56,14 +60,26 @@ class Processor:
                             if self.report == True:
                                 self.node_to_node_connections["N"+str(i)]=[]
                             i += 1
-                        indx = features.find("Lex(e|f)=")
+                        if weight_type == "lexEgivenF":
+                            indx = features.find("Lex(e|f)=")
+                            temp = features[indx+9:].split()[0]
                         #e_given_f = features[indx+9:indx+17]
-                        e_given_f = str(float(features[indx+9:indx+12])/100)
+                        #e_given_f = str(float(features[indx+9:indx+12])/100)
+                            score = float(temp)
+                        elif weight_type == "SCORE":
+                            d = {}
+                            for item in features.split():
+                                ind = item.split("=")[0]
+                                val = item.split("=")[1]
+                                #print ind,val
+                                d[ind] = float(val)
+                            score = d["p(e|f)"]+d["p(f|e)"]+d["p(f|e,LHS)"]+d["p(e|f,LHS)"]+ 100*d["RarityPenalty"]+ 0.3*d["p(LHS|e)"]+0.3*d["p(LHS|f)"]
+
                         j += 1
                         if self.report == True:
                             #print self.phrase_to_id[source] + "\t" + self.phrase_to_id[target]
                             self.node_to_node_connections[self.phrase_to_id[source]].append(self.phrase_to_id[target])
-                        file_basic_graph.write(self.phrase_to_id[source] + "\t" + self.phrase_to_id[target] + "\t" + e_given_f + "\n")
+                        file_basic_graph.write(self.phrase_to_id[source] + "\t" + self.phrase_to_id[target] + "\t" + str(score) + "\n")
 
         if self.report == True:
             max_len_nodes = [k for k in self.node_to_node_connections.keys() if len(self.node_to_node_connections.get(k))==max([len(n) for n in self.node_to_node_connections.values()])] 
@@ -88,6 +104,6 @@ class Processor:
 
 if __name__=="__main__":
    unique_name = "unit_test_ppdb_processor"
-   my_processor = Processor(ppdb_size="xxxl", ppdb_type="lexical", graph_output_file=unique_name+"basic_graph", \
+   my_processor = Processor(ppdb_size="xxxl", ppdb_type="lexical", ppdb_lang="en" ,graph_output_file=unique_name+"basic_graph", \
                                  phrase_to_id_file=unique_name+"phrase_to_id.pkl", id_to_phrase_file=unique_name+"id_to_phrase.pkl", phase_to_id_helper_file=unique_name+"phrase_to_id") 
-   my_processor.process()                                                                              
+   my_processor.process(weight_type = "SCORE")                                                                              
