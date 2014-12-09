@@ -38,7 +38,7 @@ class Extractor:
                     line = line.replace("__DUMMY__","RULEN-1",10)
                     p1 = line.split("\t")
                     node =  p1[0]
-                    print node
+                    #print node
                     j += 1
                     if "RULEN" in p1[1]:
                         labels = p1[1].split("RULEN")
@@ -48,6 +48,9 @@ class Extractor:
                             if label : #print label
                                 if label.split(" ")[0] != "-1":
                                     label_list.append((id_to_label["RULEN"+label.split(" ")[0]],label.split(" ")[1]))
+                                else:
+                                    # Wise choice 
+                                    label_list.append((id_to_phrase[node],label.split(" ")[1]))
                             #print label.split(" ")[0]
                             #print label.split(" ")[1]
                             #else: 

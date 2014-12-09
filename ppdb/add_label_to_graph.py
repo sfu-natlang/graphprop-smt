@@ -69,7 +69,70 @@ class Labeler:
 
         return result_list
 
-    def add_labels_to_graph(self):
+    def get_labels2(self, phrase, mode):
+        # mode 1 = replacement , mode2 = just terminal translations
+        #TODO label modes
+        result_list = []
+        grammars = self.extractor.grammar(phrase)
+        for rule in grammars:
+            parts = str(rule).split(" ||| ")
+            rule = parts[0:3]
+            srule = " ||| ".join(rule)
+            #print rule
+            temp = parts[3]
+            rem = parts[3:]
+
+            loc = temp.find("CountEF=")
+            prob = temp[loc+8:loc+8+4]
+      
+            if mode == 2:
+                if rule[1] == phrase:  # exact translation
+                    
+                    changed_rule = srule.replace(phrase, '~~~', 1)
+                    #print phrase + "<><>" + srule + "<><>" + prob + "<><>" + changed_rule
+                    label_id = ""
+                    if changed_rule in self.label_to_id:
+                        label_id = self.label_to_id[changed_rule]
+
+                    else:
+                        label_id = "RULEN"+str(self.label_counter)
+                    #print "here" + "RULEN"+str(self.label_number)
+                        self.id_to_label[label_id] = changed_rule
+                        self.label_to_id[changed_rule] = label_id
+                        self.label_counter +=1
+                    result_list.append((label_id,prob))
+
+            elif mode == 1 :
+                changed_rule = srule.replace(phrase, '~~~', 1)
+
+            #print "#".join(changed_rule)
+            #print changed_rule + " ?? " +  srule
+            #print word + " " + srule + " " + prob + " " + changed_rule
+                label_id = ""
+                if changed_rule in self.label_to_id:
+                    label_id = self.label_to_id[changed_rule]
+
+                else:
+                    label_id = "RULEN"+str(self.label_counter)
+                #print "here" + "RULEN"+str(self.label_number)
+                    self.id_to_label[label_id] = changed_rule
+                    self.label_to_id[changed_rule] = label_id
+                    self.label_counter +=1
+                result_list.append((label_id,prob))
+                ### sorting result list based on probability (for further cutting)
+        result_list = sorted(result_list,key=lambda x: x[1], reverse = True)
+
+        # cutting top labels
+        if len(result_list) > self.max_number_of_labels:
+            result_list =  result_list[0:self.max_number_of_labels]
+
+        return result_list
+
+
+
+
+
+    def add_labels_to_graph(self,mode):
         j = 0
         with open(self.graph_file,"r") as graph:
             with open(self.save_file_name+"seeds","w") as seeds_file:
@@ -78,7 +141,7 @@ class Labeler:
                         node = line.strip().split()[i]
                         if not node in self.processed_nodes:
                             phrase = self.id_to_phrase[node]
-                            labels = self.get_labels(phrase)
+                            labels = self.get_labels2(phrase,mode)
                             if labels:
                                 self.labeled_nodes.append(node)
                                 for (label,prob) in labels:
