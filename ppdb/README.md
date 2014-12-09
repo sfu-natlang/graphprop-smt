@@ -4,12 +4,10 @@ Using ppdb prapharses for solving out of vocabulary problem in SMT.
 * Cdec
 * Junto
 
-
 ## Running the code
-  For running the code you need to pass parameters to command.py and these parameters are size and type of ppdb and domain path of input data
-  e.g. `python command.py xl lexical europarl`
+  For running the code you need to pass parameters to command.py and these parameters are size , type and language of ppdb and domain path of input data
+  e.g. `python command.py xl en lexical europarl`
  
-
 
 ##Classes in the directory
 * Processor
@@ -24,13 +22,14 @@ This can be used to prune the graph in different ways. Right now it support bigr
 Note that all of these classes has their own unit test in their corresponding files.
 
 ## Other Files
-* junto_config 
-It stores junto config setup you need to keep in order to start propagation.
-
-* run_junto.sh
-By running this file, propagation will start and results will store in the assigned path.
-
 * grammar_appending.py 
 For extracting new rules and appending them to the previous rules, this file is useful.
+
+## Multi language graph construction
+Files starts with multi are multi-langauge version of the previous files. Note that the structure of stroing is different from before.
+
+
+TODO : Explain the Structure of storing
+
 
 
