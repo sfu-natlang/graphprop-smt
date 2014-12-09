@@ -1,0 +1,6 @@
+hdfs_input_pattern = /labs/natlang/ramtin/graph_input/
+hdfs_output_base = /labs/natlang/ramtin/graph_output/
+iters = 2
+mu1 = 1.0
+mu2 = 1e-2
+mu3 = 1e-2

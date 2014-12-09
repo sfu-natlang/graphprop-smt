@@ -1,0 +1,17 @@
+# input file patterns in Hadoop file system (HFS).
+# A sample input graph file is in data/input_graph_hadoop
+
+hdfs_input_pattern = /labs/natlang/ramtin/graph_input
+
+# output directory base name in HFS. Output from each iteration 
+# will be saved in a separate directory by appending iternation
+# number to this directory base name.
+hdfs_output_base = /labs/natlang/ramtin/graph_output/
+
+# number of iterations  change to 10 later
+iters = 1
+
+# hyper-parameters
+mu1 = 1.0
+mu2 = 1e-2
+mu3 = 1e-2
