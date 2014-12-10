@@ -25,16 +25,16 @@ output_path=$2
 input_file_name=$3
 
 
- mapper=identity-mapper.py
- reducer=computeDPNorm-reducer.py
+mapper=identity-mapper.py
+reducer=computeDPNorm-reducer.py
 
- name=DPNorm-$1-$3
+name=DPNorm-$1-$3
 mapper_tasks=18
-reducer_tasks=36
+reducer_tasks=3
 
 hadoop fs -mkdir $path_hdfs
-expr_date=`date +%Y_%m_%d_%H`
-
+#expr_date=`date +%Y_%m_%d_%H`
+expr_date=`date +%Y_%m_%d`
 
 hdfs_input=$path_hdfs/$input_file_name
 hdfs_output=$path_hdfs/DPNorm$ngram.$language

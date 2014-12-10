@@ -25,16 +25,16 @@ output_path=$2
 input_file_name=$3
 
 
-        mapper=createFeatureInvertedIndex-mapper.py
-        reducer=createFeatureInvertedIndex-reducer.py
+mapper=createFeatureInvertedIndex-mapper.py
+reducer=createFeatureInvertedIndex-reducer.py
 
  name=Inverted_DP_Norm-$1-$3
 mapper_tasks=18
 reducer_tasks=36
 
 hadoop fs -mkdir $path_hdfs
-expr_date=`date +%Y_%m_%d_%H`
-
+#expr_date=`date +%Y_%m_%d_%H`
+expr_date=`date +%Y_%m_%d`
 
 hdfs_input=$path_hdfs/$input_file_name
 hdfs_output=$path_hdfs/DPINV$ngram.$language

@@ -25,6 +25,17 @@ def load_feature_inverted_index(file_name):
         invertedDict[feat]=eval(lst)
     f.close()
         
+def load_paraphrase(file_name):
+    global paraphrases
+    sys.stderr.write('%s: loading paraphrases\n'%datetime.now().strftime('%H:%M:%S'))
+    paraphrases={}
+    f=open(file_name)
+    #f=open('DPInv.%s'%ext)
+    for line in f:
+        phrase, lst=line.split('\t')
+        paraphrases[phrase]=eval(lst)
+    f.close()
+
 def load_feature_inverted_index_pickled(file_name):
     global invertedDict
     sys.stderr.write('%s: loading inverted index\n'%datetime.now().strftime('%H:%M:%S'))
@@ -177,29 +188,30 @@ def create_bipartite_graph_beam(phr, dp_lst):
 def create_bipartite_graph(phr, dp_lst):
     if phr not in oovs: return  # only oovs pass
     phr_len=len(phr.split())
-    neighbors=defaultdict(float)
-    for cont_word,assoc in dp_lst:
-        for neighbor, n_assoc in invertedDict[cont_word]:
-            #if neighbor in dpNormsDict:
-            neighb_len=len(neighbor.split())
-            dvd=max(phr_len, neighb_len)
-            neighbors[neighbor]+=assoc*n_assoc/dvd
-    if phr in neighbors:
-        del neighbors[phr]
+#    neighbors=defaultdict(float)
+#    for cont_word,assoc in dp_lst:
+#        for neighbor, n_assoc in invertedDict[cont_word]:
+#            #if neighbor in dpNormsDict:
+#            neighb_len=len(neighbor.split())
+#            dvd=max(phr_len, neighb_len)
+#            neighbors[neighbor]+=assoc*n_assoc/dvd
+#    if phr in neighbors:
+#        del neighbors[phr]
     #for neighbor in neighbors:
         #neighb_len=len(neighbor.split())
         ##dvd=1 if phr_len==neighb_len else max(phr_len, neighb_len)        
         #dvd=max(phr_len, neighb_len)
         #neighbors[neighbor]/=(dpNormsDict[phr]*dpNormsDict[neighbor]*dvd)
     #neighbor_items=neighbors.items()
-    neighbor_items=[]
-    for word, prob in neighbors.items():
-        if word in phrase_table:        # make edges only to labeled ones (ignore unlabeled nodes)
-            neighbor_items.append((word, prob))
-    neighbor_items.sort(key=itemgetter(1), reverse=True)
-    del neighbor_items[int(max_neighbors_threshold):]
-    normalizer=sum(p for _,p in neighbor_items)
-    for neighbor, prob in neighbor_items:
+#    neighbor_items=[]
+#    for word, prob in neighbors.items():
+#        if word in phrase_table:        # make edges only to labeled ones (ignore unlabeled nodes)
+#            neighbor_items.append((word, prob))
+#    neighbor_items.sort(key=itemgetter(1), reverse=True)
+#    del neighbor_items[int(max_neighbors_threshold):]
+
+    normalizer=sum(p for _,p in dp_lst)
+    for neighbor, prob in dp_lst:
         #print '%s\t%s\t%f'%(neighbor, phr, prob/normalizer)
         print '%s\t%s\t%f'%(phr, neighbor, prob/normalizer) 
 
@@ -209,13 +221,16 @@ def create_tripartite_graph(phr, dp_lst):
     phr_len=len(phr.split())
     neighbors=defaultdict(float)
     is_phr_oov=phr in oovs  # otherwise it's unlabeled
-    for cont_word,assoc in dp_lst:
-        for neighbor, n_assoc in invertedDict[cont_word]:
-            neighb_len=len(neighbor.split())
-            dvd=max(phr_len, neighb_len)            
-            neighbors[neighbor]+=assoc*n_assoc/dvd
+#    for cont_word,assoc in dp_lst:
+#        for neighbor, n_assoc in invertedDict[cont_word]:
+#            neighb_len=len(neighbor.split())
+#            dvd=max(phr_len, neighb_len)            
+#            neighbors[neighbor]+=assoc*n_assoc/dvd
+    for item, prob in dp_lst:
+        neighbors[item] = prob
     if phr in neighbors:
         del neighbors[phr]
+
     labeled_items=[]
     unlabeled_items=[]
     neighbor_phrs=neighbors.keys()
@@ -264,16 +279,17 @@ def create_tripartite_graph(phr, dp_lst):
         #print '%s\t%s\t%f'%(neighbor, phr, prob/normalizer)
         print '%s\t%s\t%f'%(phr, neighbor, prob/normalizer) 
 
-
-def create_full_graph(phr, dp_lst): 
+def create_full_graph(phr, dp_lst):
     neighbors=defaultdict(float)
     phr_len=len(phr.split())
-    for cont_word,assoc in dp_lst:
-        for neighbor, n_assoc in invertedDict[cont_word]:
-            #if neighbor in dpNormsDict:   # if not, there has been some filtering on DPs e.g. freq-based filtering
-            neighb_len=len(neighbor.split())
-            dvd=max(phr_len, neighb_len)                
-            neighbors[neighbor]+=assoc*n_assoc/dvd
+#    for cont_word,assoc in dp_lst:
+#        for neighbor, n_assoc in invertedDict[cont_word]:
+#            #if neighbor in dpNormsDict:   # if not, there has been some filtering on DPs e.g. freq-based filtering
+#            neighb_len=len(neighbor.split())
+#            dvd=max(phr_len, neighb_len)
+#            neighbors[neighbor]+=assoc*n_assoc/dvd
+    for item, prob in dp_lst:
+        neighbors[item] = prob
     if phr in neighbors:
         del neighbors[phr]
     #for word in neighbors:
@@ -289,21 +305,21 @@ def create_full_graph(phr, dp_lst):
     labeled_items.sort(key=itemgetter(1), reverse=True)
     del labeled_items[int(max_neighbors_threshold/2):]
     unlabeled_items.sort(key=itemgetter(1), reverse=True)
-    del unlabeled_items[int(max_neighbors_threshold/2):]    
+    del unlabeled_items[int(max_neighbors_threshold/2):]
     neighbor_items=labeled_items+unlabeled_items;
     neighbor_items.sort(key=itemgetter(1), reverse=True)
     normalizer=sum(p for _,p in neighbor_items)
     for neighbor, prob in neighbor_items:
         #print '%s\t%s\t%f'%(neighbor, phr, prob/normalizer)
-        print '%s\t%s\t%f'%(phr, neighbor, prob/normalizer) 
+        print '%s\t%s\t%f'%(phr, neighbor, prob/normalizer)
 
 def reducer():
     for line in sys.stdin:
-    #for line in open('old/DPs.out'):
         if not line.isspace():
-            phr, dp=line.split('\t')
+            phr, lst=line.split('\t')
+            #sys.stderr.write('%s\n'%phrase)
             #if remove_stop_words and phr in stopwords: continue;
-            dp=eval(dp)
+            lst=eval(lst)
             if phr in phrase_table:
                 translations=phrase_table[phr]
                 translations.sort(key=itemgetter(1), reverse=True)
@@ -312,19 +328,22 @@ def reducer():
                 if graph_type=='bi' or graph_type=='tri':
                     continue;
             if graph_type=='bi':
-                create_bipartite_graph(phr, dp);
+                create_bipartite_graph(phr, lst);
                 #create_bipartite_graph_approx(phr, dp);
                 #create_bipartite_graph_beam(phr, dp);
             elif graph_type=='tri':
-                create_tripartite_graph(phr, dp);
+                create_tripartite_graph(phr, lst);
             elif graph_type=='full':
-                create_full_graph(phr, dp);
+                create_full_graph(phr, lst);
             else:
                 sys.stderr.write('Wrong Graph Type: %s'%graph_type)
                 sys.exit(5)
 
 
 if __name__ == "__main__":
+
+    # instead of DP we have a paraphrase file
+
     if len(sys.argv) > 1:
         ext=sys.argv[1]    
     if len(sys.argv) > 2:
@@ -336,16 +355,12 @@ if __name__ == "__main__":
     if len(sys.argv) > 4:
         max_translations=int(sys.argv[4])
         sys.stderr.write('max_translations=%d\n'%max_translations);
-    if len(sys.argv) >5:
-        load_feature_inverted_index(sys.argv[5]);
     if len(sys.argv) > 6:
-        
     #load_feature_inverted_index_pickled()
     #load_DP_norms();
         load_phrase_table(sys.argv[6])
         sys.stderr.write('Done with this part')
     if len(sys.argv) > 7:
-
         load_oovs(sys.argv[7])
     #if remove_stop_words: load_stop_words()
     reducer()

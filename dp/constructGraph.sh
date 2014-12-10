@@ -38,21 +38,26 @@ oov_file=$9
 
 mapper=identity-mapper.py
 reducer=constructGraph-reducer.py
+#reducer=ppdb_constructGraph.py 
 
 name=graphBuilder-$1-$3
-mapper_tasks=18
-reducer_tasks=36
+mapper_tasks=9
+reducer_tasks=4
 
 hadoop fs -mkdir $path_hdfs
-expr_date=`date +%Y_%m_%d_%H`
+#expr_date=`date +%Y_%m_%d_%H`
+expr_date=`date +%Y_%m_%d`
 
 hdfs_input=$path_hdfs/$input_file_name
 hdfs_output=$path_hdfs/Graph_$3
 
 hadoop fs -rm -r $hdfs_output
 hadoop fs -copyFromLocal $output_path/computeDP/$input_file_name $path_hdfs
+hadoop fs -copyFromLocal $output_path/computeInvIndx/$DP_Inv_File $path_hdfs
+hadoop fs -copyFromLocal $input_path/$phrase_table_file $path_hdfs
+hadoop fs -copyFromLocal $input_path/$oov_file $path_hdfs
 
-hadoop jar $jar_file -D mapred.task.timeout=240000000 -D mapred.job.name=$name -D mapred.map.tasks=$mapper_tasks -D mapred.reduce.tasks=$reducer_tasks -mapper $mapper -file $mapper -reducer "\"$reducer $language $n $graph_type 100 $output_path/computeInvIndx/$DP_Inv_File $input_path/$phrase_table_file $input_path/$oov_file\"" -file $reducer -input $hdfs_input -output $hdfs_output -file $output_path/computeInvIndx/$DP_Inv_File -file $input_path/$phrase_table_file -file $input_path/$oov_file
+hadoop jar $jar_file -D mapred.task.timeout=240000000 -D mapred.job.name=$name -D mapred.map.tasks=$mapper_tasks -D mapred.reduce.tasks=$reducer_tasks -mapper $mapper -file $mapper -reducer "\"$reducer $language $n $graph_type 100 $DP_Inv_File $phrase_table_file $oov_file\"" -file $reducer -input $hdfs_input -output $hdfs_output -file $output_path/computeInvIndx/$DP_Inv_File -file $input_path/$phrase_table_file -file $input_path/$oov_file
 
 # check if jobs are done
 if [ ! $? -eq 0 ]; then exit $?; fi

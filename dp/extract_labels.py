@@ -1,7 +1,6 @@
 from __future__ import division
 import sys, re
 from collections import defaultdict
-from operator import itemgetter
 
 #aggreg_type='useForward'
 aggreg_type='addIndctr'
@@ -9,41 +8,16 @@ aggreg_type='addIndctr'
 
 create_phrase_table=True
 
-#def load_syn_file(filename):
-    #global syns, syns_no
-    #syns_no=0
-    #prev_word=None
-    #syns=defaultdict(dict)
-    #for line in open(filename):
-        #line=line.strip()
-        #if line=='': 
-            #continue
-        #splits=line.split('\t')
-        #if len(splits)==1:
-            #src_word=splits[0].strip()
-            #syns_no+=1
-        #elif len(splits)==2:
-            #syns[src_word].append((splits[0].strip(), float(splits[1])))
-        #elif len(splits)==3:
-            #word=splits[0].strip()
-            #if word not in aligned_oovs: continue
-            #if word != prev_word:
-                #syns_no+=1
-                #prev_word=word
-            #syns[word][splits[1].strip()]=float(splits[2])
-        #else:
-            #sys.stderr.write('Error!\n')
-            #exit()
-
 def load_oov_align_file():
     global aligned_oovs
     sys.stderr.write('loading oov align file\n')
     aligned_oovs=defaultdict(set)
-    #oovs=set()
+    oovs=set()
     for line in oov_align_file:
         splits=line.split('\t')
+        #print splits[0].strip()
         aligned_oovs[splits[0].strip()].add(splits[1].strip())
-        #oovs.add(splits[0].strip())
+        oovs.add(splits[0].strip())
 
 def load_oov_file():
     global oovs
@@ -64,14 +38,8 @@ def load_phrtable():
         #phrase_pairs[src].append((tgt, map(lambda x: 2.7182**float(x), probs)))
         phrase_pairs[src].append((tgt, map(float, probs)))
 
-def evaluate(src, lst, prob_lst):
+def evaluate(src, lst):
     rr=[]
-    if src in lst:
-        i=lst.index(src)
-        joint=[[lst[j], prob_lst[j]] for j in range(len(lst))]
-        joint[i][1]*=2
-        joint.sort(key=itemgetter(1), reverse=True)
-        lst, prob_lst=zip(*joint)
     gold=aligned_oovs[src]
     for gold_trans in gold:
         i=0
@@ -87,13 +55,13 @@ def evaluate(src, lst, prob_lst):
     intersection=gold.intersection(cands)
     recall=len(intersection)/len(gold)
 
-    #if mrr > 0 or recall > 0:
-    #    print '%s \t MRR=%f\t Recall=%f'%(src, mrr, recall)
+#    if mrr > 0 or recall > 0:
+#        print '%s \t MRR=%f\t Recall=%f\n'%(src, mrr, recall)
     return mrr, recall
-
 
 def write_phrasetable(dic):
     # Add non-oov phrases from the baseline phrase-table       
+    aggreg_type='addForward'
     for src in phrase_pairs:
         for (tgt, probs) in phrase_pairs[src]:
             dic['%s ||| %s'%(src, tgt)]=probs+[1];
@@ -101,9 +69,7 @@ def write_phrasetable(dic):
     keys.sort()
     for key in keys:
         probs = dic[key];
-        if aggreg_type=='addIndctr':
-            output_file.write('%s ||| %s 2.718 %g ||| ||| \n'%(key, ' '.join(map(str, probs[:4])), probs[4]))
-        elif aggreg_type=='useForward':
+        if aggreg_type=='useForward':
             if probs[4]==1: # non-oov
                 output_file.write('%s ||| %s 2.718 ||| ||| \n'%(key, ' '.join(map(str, probs[:4]))))
             else: # oov
@@ -125,86 +91,37 @@ def create_aggregate_phrasetable():
         if word not in oovs: continue 
         #print sps[1]
         count+=1
-        #lbls=re.findall('([^\.\d]+ )+(\d+?\.?\d*?E?-?\d+? )+', sps[1]+' ')
-        lbls=re.findall('\|\|\|(.+?)\|\|\| (\d+?\.?\d*?E?-?\d+? )+', sps[1]+' ')
-        if len(lbls)==0: continue
-        #del lbls[0]
+        lbls=re.findall('([^\.\d]+ )+(\d+?\.?\d*?E?-?\d+? )+', sps[1]+' ')
+        #print lbls
+        if len(lbls)<2: continue
+        del lbls[0]
         label_list, prob_list=zip(*lbls)
         label_list=[s.strip() for s in label_list]
         prob_list=map(float, prob_list)
-        #prob_list=map(lambda x: float(x)**2, prob_list)
-        m, r=evaluate(word, label_list, prob_list)
+        m, r=evaluate(word, label_list)
         mrr+=m; recall+=r;
-        normalizer=sum(prob_list)
         for label, prob in zip(label_list, prob_list):
-            dic['%s ||| %s'%(word, label)]=[1, 1, prob/normalizer, 1, prob/normalizer]
-    print "MRR=%f\t\tRecall=%f\t\toovs=%d/%d"%(mrr/len(oovs), recall/len(oovs), count, len(oovs))
+            dic['%s ||| %s'%(word, label)]=[1, 1, prob, 1, prob]
+    print "MRR=%f\t\tRecall=%f\t\toovs=%d\n"%(mrr/count, recall/count, count)
     if create_phrase_table: write_phrasetable(dic)
-    
-
-def create_aggregate_phrasetable_dummy():
-    mrr=recall=0
-    dic={}
-    count=0
-    for line in label_file:
-        sps=filter(lambda x: x!='', line.split('\t'))
-        word=sps[0]
-        if word not in oovs: continue 
-        #print sps[1]
-        count+=1
-        #lbls=re.findall('([^\.\d]+ )+(\d+?\.?\d*?E?-?\d+? )+', sps[1]+' ')
-        lbls=re.findall('\|\|\|(.+?)\|\|\| (\d+?\.?\d*?E?-?\d+? )+', sps[1]+' ')
-        if len(lbls)==0: continue
-        #del lbls[0]
-        label_list, prob_list=zip(*lbls)
-        label_list=[s.strip() for s in label_list]
-        prob_list=map(float, prob_list)
-        if word not in label_list:
-            #splits=sps[1].split()
-            #dummy_score=splits[splits.index('__DUMMY__')+1]
-            #lbls.append((word, float(dummy_score)))
-            #lbls=map(lambda x: (x[0].strip(), float(x[1])), lbls)
-            #lbls.sort(key=itemgetter(1), reverse=True)
-            #label_list, prob_list=zip(*lbls)
-            label_list.insert(0, word)
-            prob_list.insert(0, prob_list[0])
-            #label_list.insert(5, word)
-            #prob_list.insert(5, prob_list[5])            
-        #else:
-        #    prob_list=map(float, prob_list)
-            
-        #prob_list=map(lambda x: float(x)**2, prob_list)
-        m, r=evaluate(word, label_list, prob_list)
-        mrr+=m; recall+=r;
-        normalizer=sum(prob_list)
-        for label, prob in zip(label_list, prob_list):
-            dic['%s ||| %s'%(word, label)]=[1, 1, prob/normalizer, 1, prob/normalizer]
-    print "MRR=%f\t\tRecall=%f\t\toovs=%d/%d"%(mrr/len(oovs), recall/len(oovs), count, len(oovs))
-    #if create_phrase_table: write_phrasetable(dic)
+    #write_phrasetable(dic)
 
 
 
 if __name__ == "__main__":
     global label_file, oov_file, oov_align_file, output_file
-    print "USAGE: python %s label_file, oov_file, oov_align_file, phrasetable_file output_file aggreg_type"%(sys.argv[0])
+    create_phrase_table = False
+    print "USAGE: python %s label_file, oov_file, oov_align_file, phrasetable_file output_file\n"
     label_file=open(sys.argv[1])
     oov_file=open(sys.argv[2])
-    try:
-        oov_align_file=open(sys.argv[3])
-        load_oov_align_file()
-    except:
-        aligned_oovs={}
+    oov_align_file=open(sys.argv[3])
     phrasetable_file=open(sys.argv[4])
     if create_phrase_table: 
         output_file=open(sys.argv[5], 'w')
         load_phrtable()
     if len(sys.argv)>6:
         aggreg_type=sys.argv[6]
-    
-    #if aggreg_type=='addIndctr':
-        #load_syn_file(sys.argv[7])
+    load_oov_align_file()
     load_oov_file()
-    #create_aggregate_phrasetable_dummy()
-    #label_file.seek(0)
     create_aggregate_phrasetable()
 

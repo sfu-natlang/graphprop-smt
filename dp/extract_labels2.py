@@ -173,19 +173,31 @@ def write_record(key, probs, word_align='', counts=''):
 
 
 def create_aggregate_phrasetable():
-    global dic
+    global dic, label_file,label_file_name
     dic=defaultdict(list)
     mrr=recall=0
     #dic={}
     count=0
-    for line in label_file:
+    print "<><><><><><><><>"
+    print type(label_file)
+    print label_file
+    print label_file.readlines()
+    
+    inp = open(label_file_name)
+    for line in inp:
+#            print line
+#    for line in label_file:
+#        print "~~~~~~"
+#        print line
         sps=filter(lambda x: x!='', line.split('\t'))
         word=sps[0]
+#        print word
         if word not in oovs: continue 
         #print sps[1]
         count+=1
-        #lbls=re.findall('([^\.\d]+ )+(\d+?\.?\d*?E?-?\d+? )+', sps[1]+' ')
-        lbls=re.findall('\|\|\|(.+?)\|\|\| (\d+?\.?\d*?E?-?\d+? )+', sps[1]+' ')
+        lbls=re.findall('([^\.\d]+ )+(\d+?\.?\d*?E?-?\d+? )+', sps[1]+' ')
+        #lbls=re.findall('\|\|\|(.+?)\|\|\| (\d+?\.?\d*?E?-?\d+? )+', sps[1]+' ')
+        print lbls
         if len(lbls)==0: continue
         #del lbls[0]
         label_list, prob_list=zip(*lbls)
@@ -209,10 +221,12 @@ def create_aggregate_phrasetable():
         normalizer=sum(prob_list)
         #normalizer=1
         for label, prob in zip(label_list, prob_list):
-            dic['%s ||| %s'%(word, label)]=[1, 1, prob/normalizer, 1, prob/normalizer]
+            if prob != 0.0: dic['%s ||| %s'%(word, label)]=[1, 1, prob/normalizer, 1, prob/normalizer]
             #print '%s ||| %s\t\t %f'%(word, label, prob)
+    inp.close()
     print "MRR=%f\t\tRecall=%f\t\toovs=%d/%d"%(mrr/len(oovs), recall/len(oovs), count, len(oovs))
-    if create_phrase_table: 
+    if create_phrase_table:
+        print dic 
         global oov_phrtable_file
         oov_phrtable_file=open(output_file.name+'.oovs', 'w')
         print "creating a file for oovs"
@@ -263,9 +277,10 @@ def create_aggregate_phrasetable_dummy():
 
 
 if __name__ == "__main__":
-    global label_file, oov_file, oov_align_file, output_file
+    global label_file_name, label_file, oov_file, oov_align_file, output_file
     print "USAGE: python %s label_file, oov_file, oov_align_file, phrasetable_file output_file aggreg_type"%(sys.argv[0])
     label_file=open(sys.argv[1])
+    label_file_name = sys.argv[1]
     oov_file=open(sys.argv[2])
     try:
         oov_align_file=open(sys.argv[3])
@@ -286,7 +301,7 @@ if __name__ == "__main__":
     if aggreg_type=='addIndctr':
         load_syn_file(sys.argv[7])
     load_oov_file()
-    #create_aggregate_phrasetable_dummy()
+    create_aggregate_phrasetable_dummy()
     #label_file.seek(0)
     create_aggregate_phrasetable()
 

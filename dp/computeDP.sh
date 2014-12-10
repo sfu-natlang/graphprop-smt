@@ -53,17 +53,18 @@ reducer=createDP-reducer.py
 
 name=ComputeDP-$1-$2-$3
 
-mapper_tasks=18
-reducer_tasks=36
+mapper_tasks=18 #18
+reducer_tasks=36 #36
 
 hadoop fs -mkdir $path_hdfs
-expr_date=`date +%Y_%m_%d_%H`
+#expr_date=`date +%Y_%m_%d_%H`
+expr_date=`date +%Y_%m_%d`
 
 hdfs_input=$path_hdfs/$input_file_name
 hdfs_output=$path_hdfs/ComputeDP$ngram.$language
 
 hadoop fs -rm -r $hdfs_output
-hadoop fs -copyFromLocal $input_path/monotext/$input_file_name $path_hdfs
+hadoop fs -copyFromLocal $input_path/$input_file_name $path_hdfs
 hadoop fs -copyFromLocal $output_path/countFreq/$freq_file_name $path_hdfs
 #hadoop fs -copyFromLocal $input_dir/stopwords/stopwords.$language $path_hdfs
 

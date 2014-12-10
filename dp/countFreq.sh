@@ -38,8 +38,8 @@ mapper_tasks=18
 reducer_tasks=36
         
 hadoop fs -mkdir $path_hdfs
-expr_date=`date +%Y_%m_%d_%H`
-
+#expr_date=`date +%Y_%m_%d_%H`
+expr_date=`date +%Y_%m_%d`
 
 hdfs_input=$path_hdfs/$input_file_name
 hdfs_output=$path_hdfs/FreqCount$ngram.$language
