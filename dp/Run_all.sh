@@ -5,9 +5,16 @@ timestamp=`date +%Y_%m_%d`
 monotext_filename='europarl_v7-1k.en'
 ngram=1
 language='fr'
-directory='/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/'
+directory='/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/fr-en/'
 monotext_directory='/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/monotext/'
 experiments_directory='/cs/natlang-user/ramtin/new_graph/graphprop-smt/dp/experiments'
+
+oov_file='oovs.fr'
+graph_type='bi' # tri
+max_number_of_neighbours=15
+phrase_table_file='phrase-table.moses.fr'
+
+iter_number_for_output='10'
 
 sh countFreq.sh $language $ngram $monotext_directory $experiments_directory $monotext_filename
 
@@ -22,13 +29,11 @@ sh computeInvertedIndex.sh $directory $experiments_directory $monotext_filename.
 
 
 # TODO clean this
-sh constructGraph.sh /cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/en-es/ /cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/experiments/ $filename.2.$timestamp.en bi 15 $filename.2.$timestamp.en.$timestamp.indx en temp.en oovs.en
-
-# EXAMPLE
-$output_path/$graph_file'_finalitr10'
+sh constructGraph.sh $directory $experiments_directory $monotext_filename.$ngram.$timestamp.$language $graph_type $max_number_of_neighbours $monotext_filename.$ngram.$timestamp.$language.$timestamp.indx $language $phrase_table_file $oov_file
 
 
-
+# Evaluation
+sh evaluate.sh $experiments_directory/Graph/$monotext_filename.$ngram.$timestamp.$language.$timestamp.graph'_finalitr'$iter_number_for_output
 
 
 
