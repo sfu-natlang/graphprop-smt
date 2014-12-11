@@ -18,6 +18,13 @@ merged_phrase_table_file='phrase-table.moses.fr.merged' # TODO add info to this
 
 iter_number_for_output='2'
 
+
+#### trigram patch
+experiments_directory='/cs/natlang-user/ramtin/new_graph/graphprop-smt/dp/experiments-tri-dp'
+graph_type='tri'
+
+############
+
 #sh countFreq.sh $language $ngram $monotext_directory/monotext/ $experiments_directory $monotext_filename
 
 #TODO stopword considering
@@ -34,21 +41,47 @@ iter_number_for_output='2'
 #sh constructGraph.sh $directory $experiments_directory $monotext_filename.$ngram.$timestamp.$language $graph_type $max_number_of_neighbours $monotext_filename.$ngram.$timestamp.$language.$timestamp.indx $language $phrase_table_file $oov_file
 
 # Propagation
-#sh propagate.sh $directory $experiments_directory /Graph/$monotext_filename.$ngram.$timestamp.$language.$timestamp.graph
+sh propagate.sh $directory $experiments_directory /Graph/$monotext_filename.$ngram.$timestamp.$language.$timestamp.graph
 
 # Evaluation
-#sh evaluate.sh $directory $experiments_directory /Graph/$monotext_filename.$ngram.$timestamp.$language.$timestamp.graph'_finalitr'$iter_number_for_output $oov_file $gold_oov_file $phrase_table_file $merged_phrase_table_file
+sh evaluate.sh $directory $experiments_directory /Graph/$monotext_filename.$ngram.$timestamp.$language.$timestamp.graph'_finalitr'$iter_number_for_output $oov_file $gold_oov_file $phrase_table_file $merged_phrase_table_file
 
 
 
+######### PPDB
+timestamp=`date +%Y_%m_%d`
+monotext_filename='europarl_v7.fr'
+ngram=1
+language='fr'
+directory='/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl/fr-en/'
+monotext_directory='/cs/natlang-user/ramtin/new_graph/graphprop-smt/domain/europarl'
+experiments_directory='/cs/natlang-user/ramtin/new_graph/graphprop-smt/dp/experiment-bi-ppdb'
 
+oov_file='oovs.fr'
+gold_oov_file='oovs.gold.fr'
+graph_type='bi' # tri
+max_number_of_neighbours=15
+phrase_table_file='phrase-table.moses.fr'
+merged_phrase_table_file='phrase-table.moses.fr.merged' # TODO add info to this
 
-#### trigram 
+dp_format_ppdb_file='ppdb-1.0-l-lexical-dp.2014_11_21_16.indx'
 
+iter_number_for_output='2'
+#### adding ppdb instead of dpInv and use other construction code
 
+touch temp_file
+mkdir $experiments_directory/computeDP
+cp dp_format_ppdb_files/$dp_format_ppdb_file $experiments_directory/computeDP/ 
 
+# TODO clean this
+sh ppdb_constructGraph.sh $directory $experiments_directory $dp_format_ppdb_file $graph_type $max_number_of_neighbours temp_file $language $phrase_table_file $oov_file
 
+rm temp_file
+# Propagation
+sh propagate.sh $directory $experiments_directory /Graph/$dp_format_ppdb_file.$timestamp.graph
 
+# Evaluation
+sh evaluate.sh $directory $experiments_directory /Graph/$dp_format_ppdb_file.$timestamp.graph'_finalitr'$iter_number_for_output $oov_file $gold_oov_file $phrase_table_file $merged_phrase_table_file
 
 
 
