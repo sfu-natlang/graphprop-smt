@@ -52,30 +52,32 @@ sh /cs/natlang-user/ramtin/new_graph/graphprop-smt/propagation/run_junto.sh $out
 #if [ ! $? -eq 0 ]; then exit $?; fi
 
 
+
+
 # TODO cleaning labels
 
-graph_file=/Graph/mono.fr.1.2014_11_19_16.fr.2014_11_26_15.graph
+#graph_file=/Graph/mono.fr.1.2014_11_19_16.fr.2014_11_26_15.graph
 
-new_file='temp'
-cat $output_path/$graph_file'_finalitr10' |  sed 's/\~/ /g' | sed 's/|||//g' | sed 's, /,,g' > $new_file
+#new_file='temp'
+#cat $output_path/$graph_file'_finalitr10' |  sed 's/\~/ /g' | sed 's/|||//g' | sed 's, /,,g' > $new_file
 
-print "----------------------"
-touch $output_path/new_phrase_table
-results=`python extract_labels.py $new_file $input_path/oovs.fr $input_path/oovs.gold.fr $input_path/phrase-table.fr $output_path/new_phrase_table`
+#print "----------------------"
+#touch $output_path/new_phrase_table
+#results=`python extract_labels.py $new_file $input_path/oovs.fr $input_path/oovs.gold.fr $input_path/phrase-table.fr $output_path/new_phrase_table`
 
 #echo "python extract_labels.py $new_file $input_path/oovs.fr $input_path/oovs.gold.fr $input_path/phrase-table.fr $output_path/new_phrase_table"
 #rm $new_file
 #results=`python extract_labels.py $output_path/label_prop_output.mapped $input_path/oovs.dev.fr $input_path/oovs.gold.dev.fr $input_path/phrase-table.fr $output | tail -n 1`
 
 
-corpus="europarl"
-graph_type="tri"
-d="0"
-l="fr"
-n=20
-str="$corpus\t\t$graph_type\t\td=$d\t\tn=$n\t\tl=$l\t\t$results\t\t"
-echo -e $str | tee -a results.txt
-echo -e $str >> $output_path/result.txt
+#corpus="europarl"
+#graph_type="tri"
+#d="0"
+#l="fr"
+#n=20
+#str="$corpus\t\t$graph_type\t\td=$d\t\tn=$n\t\tl=$l\t\t$results\t\t"
+#echo -e $str | tee -a results.txt
+#echo -e $str >> $output_path/result.txt
 
 
 # Phrase Table Integration
